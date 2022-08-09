@@ -1,25 +1,6 @@
 export const config_payload = `{"percent":5.0,"binWidth":120,"poolFee":3000}`;
 
-export const config = `{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Strategy Config",
-  "type": "object",
-  "properties": {
-    "percent": {
-        "type": "number",
-        "description": "Percent for trailing stop order"
-    },
-    "poolFee": {
-      "type": "number",
-      "description": "expanded pool fee percent for Uniswapv3 pool"
-    },
-    "binWidth": {
-        "type": "number",
-        "description": "Width for liquidity position, must be a multiple of pool tick spacing"
-    }
-  },
-  "required": ["percent", "binWidth", "poolFee"]
-}`;
+export const config = `{"$schema":"http://json-schema.org/draft-07/schema#","title":"Strategy Config","type":"object","properties":{"percent":{"type":"number","description":"Percent for trailing stop order"},"poolFee":{"type":"number","description":"Pool fee percent for Uniswapv3 pool","enum":[1,10,60,200],"enumNames":["Lowest 0.01%","Low 0.05%","Medium 0.3%","High 1%"]}},"required":["percent","poolFee"],"allOf":[{"if":{"properties":{"poolFee":{"const":200}}},"then":{"properties":{"binWidth":{"type":"integer","description":"Width for liquidity position, must be a multiple of pool tick spacing","multipleOf":200,"minimum":200}},"required":["binWidth"]}},{"if":{"properties":{"poolFee":{"const":60}}},"then":{"properties":{"binWidth":{"type":"integer","description":"Width for liquidity position, must be a multiple of pool tick spacing","multipleOf":60,"minimum":60}},"required":["binWidth"]}},{"if":{"properties":{"poolFee":{"const":10}}},"then":{"properties":{"binWidth":{"type":"integer","description":"Width for liquidity position, must be a multiple of pool tick spacing","multipleOf":10,"minimum":10}},"required":["binWidth"]}},{"if":{"properties":{"poolFee":{"const":1}}},"then":{"properties":{"binWidth":{"type":"integer","description":"Width for liquidity position, must be a multiple of pool tick spacing","multipleOf":1,"minimum":1}},"required":["binWidth"]}}]}`;
 
 export const empty = '{"data":[]}';
 

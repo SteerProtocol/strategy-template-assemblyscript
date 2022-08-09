@@ -1,5 +1,5 @@
 import { JSON } from "assemblyscript-json";
-import {Position, parsePrices, getTickFromPrice, trailingStop, renderULMResult, getTickSpacing} from "@steerprotocol/strategy-utils";
+import {Position, parsePrices, getTickFromPrice, trailingStop, renderULMResult} from "@steerprotocol/strategy-utils";
 
 
 let width: i32 = 600;
@@ -51,12 +51,9 @@ function calculateBin(upper: f32): Position[] {
   // Calculate the upper tick based on the start of the stop
   const upperTick: i32 = i32(Math.round(getTickFromPrice(upper)));
 
-  // Get the spacing
-  const tickSpacing = getTickSpacing(poolFee);
-
   // Step down ticks until we reach an initializable tick
   let _startTick: i32 = upperTick;
-  while (_startTick % tickSpacing !== 0) {
+  while (_startTick % poolFee  !== 0) {
     _startTick--;
   }
 
@@ -79,14 +76,94 @@ export function config(): string{
       },
       "poolFee": {
         "type": "number",
-        "description": "expanded pool fee percent for Uniswapv3 pool"
-      },
-      "binWidth": {
-          "type": "number",
-          "description": "Width for liquidity position, must be a multiple of pool tick spacing"
+        "description": "Pool fee percent for Uniswapv3 pool",
+        "enum": [1,10,60,200],
+        "enumNames" : ["Lowest 0.01%", "Low 0.05%", "Medium 0.3%", "High 1%"]
       }
     },
-    "required": ["percent", "binWidth", "poolFee"]
+    "required": ["percent",  "poolFee"],
+    "allOf": [
+      {
+        "if" : {
+          "properties": {
+            "poolFee" : {
+              "const" : 200
+            }
+          }
+      },
+      "then" : {
+        "properties": {
+          "binWidth": {
+            "type": "integer",
+          "description": "Width for liquidity position, must be a multiple of pool tick spacing",
+          "multipleOf": 200,
+          "minimum": 200
+          }
+        },
+        "required": ["binWidth"]
+      }
+      },
+      {
+        "if" : {
+          "properties": {
+            "poolFee" : {
+              "const" : 60
+            }
+          }
+      },
+      "then" : {
+        "properties": {
+          "binWidth": {
+            "type": "integer",
+          "description": "Width for liquidity position, must be a multiple of pool tick spacing",
+          "multipleOf": 60,
+          "minimum": 60
+          }
+        },
+        "required": ["binWidth"]
+      }
+      },
+      {
+        "if" : {
+          "properties": {
+            "poolFee" : {
+              "const" : 10
+            }
+          }
+      },
+      "then" : {
+        "properties": {
+          "binWidth": {
+            "type": "integer",
+          "description": "Width for liquidity position, must be a multiple of pool tick spacing",
+          "multipleOf": 10,
+          "minimum": 10
+          }
+        },
+        "required": ["binWidth"]
+      }
+      },
+      {
+        "if" : {
+          "properties": {
+            "poolFee" : {
+              "const" : 1
+            }
+          }
+      },
+      "then" : {
+        "properties": {
+          "binWidth": {
+            "type": "integer",
+          "description": "Width for liquidity position, must be a multiple of pool tick spacing",
+          "multipleOf": 1,
+          "minimum": 1
+          }
+        },
+        "required": ["binWidth"]
+      }
+      }
+    ]
   }`;
 }
 
