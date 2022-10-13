@@ -7,7 +7,20 @@ describe("WASM Module", () => {
   describe("Custom Strategy", () => {
     test("can render config", async () => {
       // Call the config function on the strategy bundle
-      const result = myModule.config();
+      let paramsMemoryRef = myModule.__pin(
+        myModule.__newString(
+          JSON.stringify({
+            percent: 5.0,
+            binWidth: 120,
+            poolFee: 3000
+          })
+        )
+      );
+      const stratObj = myModule.Strategy(paramsMemoryRef);
+
+      const configReturn = stratObj.config();
+      const result = myModule.__getString(configReturn);
+
       // Pull the result from memory and parse the result
       const parsedResult = JSON.parse((result));
 
@@ -30,14 +43,28 @@ describe("WASM Module", () => {
       // );
 
       // The actual strategy instantiation and execution
-      const strategy = myModule.initialize(config_payload);
+      // Call the config function on the strategy bundle
+      let paramsMemoryRef = myModule.__pin(
+        myModule.__newString(
+          JSON.stringify({
+            percent: 5.0,
+            binWidth: 120,
+            poolFee: 3000
+          })
+        )
+      );
+      const stratObj = myModule.Strategy(paramsMemoryRef);
       // Here we pin the array to the WASM memory
-      // let priceMemoryRef = myModule.__pin(
-      //   myModule.__newString(JSON.stringify(prices))
-      // );
+      let priceMemoryRef = myModule.__pin(
+        myModule.__newString(JSON.stringify(prices))
+      );
       
       // Call the config function on the strategy bundle
-      const result = myModule.execute(JSON.stringify(prices));
+      const resultPtr = stratObj.execute(priceMemoryRef);
+
+
+      const result = myModule.__getString(resultPtr);
+        console.log(result)
       // Pull the result from memory and parse the result
       const parsedResult = JSON.parse((result));
 
