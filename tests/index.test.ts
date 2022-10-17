@@ -5,6 +5,14 @@ const myModule = require("../untouchLoader");
 
 describe("WASM Module", () => {
   describe("Custom Strategy", () => {
+
+    test("can return version", async () => {
+
+      const version = myModule.version();
+  
+      expect(version).toEqual(2);
+  });
+
     test("can render config", async () => {
       // Call the config function on the strategy bundle
       let paramsMemoryRef = myModule.__pin(

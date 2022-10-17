@@ -2,7 +2,14 @@ import { JSON } from "assemblyscript-json";
 import {Position, parsePrices, getTickFromPrice, trailingStop, renderULMResult, getTickSpacing} from "@steerprotocol/strategy-utils";
 import {BaseStrategy} from "./baseStrategy";
 
+// Public function for version support node-side
+// Check the releases and docs for the latest features, interfaces, and support
+export function version(): i32{
+  return BaseStrategy.version;
+}
+
 // Trailing Stop Loss Strategy based on candles from swap data from Uniswapv3
+// Class needs be called Strategy
 export class Strategy extends BaseStrategy {
 
   width: i32 = 600;
@@ -37,35 +44,9 @@ export class Strategy extends BaseStrategy {
     this.poolFee = i32(_poolFee._num);
   }
 
-  // initialize(config: string): void {
-  //   // Parse the config object
-  //   const configJson = <JSON.Obj>JSON.parse(config);
-  //   // Get our config variables
-  //   const _width = configJson.getInteger("binWidth");
-  //   const _poolFee = configJson.getInteger("poolFee");
-  //   const _percent = configJson.getValue("percent");
-  //   // Handle null case
-  //   if (_width == null || _percent == null || _poolFee == null) {
-  //     throw new Error("Invalid configuration");
-  //   }
-  
-  //   // Handle int percents
-  //   if (_percent.isFloat) {
-  //     const f_percent = <JSON.Num>_percent
-  //     this.percent = f32(f_percent._num);
-  //   }
-  //   if (_percent.isInteger) {
-  //     const i_percent = <JSON.Integer>_percent
-  //     this.percent = f32(i_percent._num);
-  //   }
-  //   // Assign values to memory
-  //   this.width = i32(_width._num);
-  //   this.poolFee = i32(_poolFee._num);
-  // }
-  
-  execute(_prices: string): string {
-    // _prices will have the results of the dc, which is only candles here
-    const prices = parsePrices(_prices, 0);
+  execute(data: string): string {
+    // data will have the results of the data connectors, which is only candles here at [0]
+    const prices = parsePrices(data, 0);
     // If we have no candles 
     if (prices.length == 0) {return `skip tend, no candles`}
     // Get Trailing stop price

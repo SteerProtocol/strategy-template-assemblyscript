@@ -1,8 +1,9 @@
-import { JSON } from "assemblyscript-json";
 
 // Base abstract class for designing strategies on Steer
 // To read about strategy's interface see https://docs.steer.finance/Strategies/interface-api 
 export abstract class BaseStrategy {
+
+    static version: i32 = 2;
 
     // Sets any strategy-specific parameters 
     constructor(config: string){};
@@ -19,10 +20,8 @@ export abstract class BaseStrategy {
         return 'This should be a react-json-schema for creating the manifest';
     };
 
-    // For supporting future improvements of our bundling interface and system
-    // Check releases to see what new versions bring and what is best for you.
-    version(): i32 {
-        // You probably won't overwrite this function
-        return 2;
-    };
+    // Check the releases and docs for the latest features, interfaces, and support
+    getVersion(): i32{
+        return BaseStrategy.version;
+    }
 }
