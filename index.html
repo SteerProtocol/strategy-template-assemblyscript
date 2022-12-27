@@ -56,6 +56,36 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
+				<a href="#strategy-template-assemblyscript" id="strategy-template-assemblyscript" style="color: inherit; text-decoration: none;">
+					<h1>strategy-template-assemblyscript</h1>
+				</a>
+				<p>AssemblyScript based Strategy Template for the Steer Protocol.</p>
+				<p>Start building on <a href="https://steer.finance">Steer Protocol</a> with our AssemblyScript template. Expand your smart contract capabilities with off-chain compute! More info can be found here: <a href="https://docs.steer.finance/steer-apps/writing-an-app">Documentation</a></p>
+				<a href="#tip" id="tip" style="color: inherit; text-decoration: none;">
+					<h2>Tip!</h2>
+				</a>
+				<p><a href="https://bit.ly/3BsQ3DT">Use our one-click in-browser development environment</a></p>
+				<a href="#project-structure" id="project-structure" style="color: inherit; text-decoration: none;">
+					<h2>Project Structure</h2>
+				</a>
+				<p>Apps have three external functions that are used by the Steer system. Additional methods, classes, or varaibles can be used in conjunction with these required functions for any desired behavior. For more information please see the app interface. This design means, that as a developer, you only need to implement the methods which are required for the app to work.</p>
+				<p>Below are the significant files and folders which you will want to get familiar with:</p>
+				<pre><code><span style="color: #000000">├── </span><span style="color: #001080">assembly</span><span style="color: #000000">      </span><span style="color: #008000">// Source code for the app</span>
+<span style="color: #000000">├── </span><span style="color: #001080">build</span><span style="color: #000000">         </span><span style="color: #008000">// Output of the build process aka `yarn asbuild`</span>
+<span style="color: #000000">├── </span><span style="color: #001080">coverage</span><span style="color: #000000">      </span><span style="color: #008000">// Coverage report for testing</span>
+<span style="color: #000000">├── </span><span style="color: #001080">tests</span><span style="color: #000000">         </span><span style="color: #008000">// Test files with a built in test runner</span>
+<span style="color: #000000">├── </span><span style="color: #001080">asconfig</span><span style="color: #000000">.</span><span style="color: #001080">json</span><span style="color: #000000"> </span><span style="color: #008000">// Assemblyscript config</span>
+<span style="color: #000000">├── </span><span style="color: #001080">index</span><span style="color: #000000">.</span><span style="color: #001080">js</span><span style="color: #000000">      </span><span style="color: #008000">// Javascript entrypoint for the app when running tests</span>
+<span style="color: #000000">├── </span><span style="color: #001080">package</span><span style="color: #000000">.</span><span style="color: #001080">json</span><span style="color: #000000">  </span><span style="color: #008000">// Dependencies for the app</span>
+</code></pre>
+				<a href="#project-setup" id="project-setup" style="color: inherit; text-decoration: none;">
+					<h2>Project Setup</h2>
+				</a>
+				<p>Once the template has been cloned, you will need to install the project dependencies. This can be done via the following command:</p>
+				<p><code>yarn install</code></p>
+				<p>INFO
+				You will notice that there is a post-install script which will compile the ./assembly source folder and populate the ./build folder. This is done to make it easier to run the tests. We will cover this later.</p>
+				<p>Once you have set up your project, you can begin defining your app.</p>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
