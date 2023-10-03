@@ -22,7 +22,7 @@ describe("WASM Module", () => {
       // The actual strategy instantiation and execution
       myModule.initialize(config_payload);
       // Call the config function on the strategy bundle
-      const result = myModule["execute(param_1: string)"](JSON.stringify(prices2));
+      const result = myModule.execute(JSON.stringify(prices2));
       // Pull the result from memory and parse the result
       const parsedResult = JSON.parse(result);
       // The result should match the given config
