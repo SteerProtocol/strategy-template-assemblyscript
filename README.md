@@ -34,7 +34,7 @@ You will notice that there is a post-install script which will compile the ./ass
 
 After making chenges to the assemblyscript code, compile and build the wasm files with the command:
 
-```yarn asbuild```
+```yarn build:debug```
 
 You will find a number of webassembly related files in the ./build folder.
 

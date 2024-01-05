@@ -1,4 +1,5 @@
 {
   "conventionalCommits.scopes": [],
-  "jest.jestCommandLine": "yarn test"
+  "jest.jestCommandLine": "yarn test",
+  "workbench.iconTheme": "material-icon-theme"
 }

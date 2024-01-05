@@ -1,58 +1,45 @@
 import { getTickFromPrice, getTickSpacing, renderULMResult } from "@steerprotocol/concentrated-liquidity-strategy/assembly";
-import { parseCandles, Position, console, trailingStop } from  "@steerprotocol/strategy-utils/assembly";
+import { parseCandles, Position, trailingStop } from "@steerprotocol/strategy-utils/assembly";
 import { JSON } from "json-as/assembly";
 
-let percent: f64 = 0;
-let poolFee: i32 = 0;
-
+// @ts-ignore: Decorators valid here
 @serializable
 class Config {
-  poolFee: f64 = 0;
-  percent: i32 = 0;
+  poolFee: i32 = 0;
+  percent: f64 = 0;
 }
+
+function isValidConfig(config: Config): boolean {
+  if (config.poolFee < 0) return false;
+  if (config.percent < 0) return false;
+  return true;
+}
+
+let configObj: Config = new Config();
 
 export function initialize(config: string): void {
-  // Parse the config object
-  const configJson: Config = JSON.parse<Config>(config);
+  configObj = JSON.parse<Config>(config);
 
-  // Handle null case
-  if (
-    configJson.percent == 0 ||
-    configJson.poolFee == 0 
-  ) {
-    throw new Error("Invalid configuration");
-  }
-
-  // Assign values to memory
-  percent = f64(configJson.percent);
-  poolFee = i32(configJson.poolFee);
+  if (!isValidConfig(configObj)) throw new Error("Invalid configuration");
 }
 
-function closestDivisibleNumber(num: number, divisor: number, floor: boolean): number {
-  if (floor) return Math.floor(num / divisor) * divisor;
-  return Math.ceil(num / divisor) * divisor;
+function closestDivisibleNumber(num: i32, divisor: i32, floor: boolean): i32 {
+  if (floor) return i32(Math.floor(num / divisor) * divisor);
+  return i32(Math.ceil(num / divisor) * divisor);
 }
 
 export function execute(_prices: string): string {
-  // _prices will have the results of the dc, which is only candles here
   const prices = parseCandles(_prices);
-  // If we have no candles, skip action
-  if (prices.length == 0) {
-    return `continue`;
-  }
+  if (prices.length == 0) throw new Error("Expected to find candles, but found none!");
 
-  const lowerLimit = trailingStop(percent, prices);
+  const lowerLimit = trailingStop(configObj.percent, prices);
   const upperLimit = prices[prices.length - 1].close;
-  
-  const upperTick = closestDivisibleNumber(i32(Math.round(getTickFromPrice(f64(upperLimit)))), getTickSpacing(poolFee), false);
-  const lowerTick = closestDivisibleNumber(i32(Math.round(getTickFromPrice(f64(lowerLimit)))), getTickSpacing(poolFee), true);
-  
-  // Calculate position
 
-  
-  const positions = [new Position(i32(lowerTick), i32(upperTick), 100)];
+  const upperTick = closestDivisibleNumber(getTickFromPrice(upperLimit), getTickSpacing(configObj.poolFee), false);
+  const lowerTick = closestDivisibleNumber(getTickFromPrice(lowerLimit), getTickSpacing(configObj.poolFee), true);
 
-  // Format and return result
+  const positions = [new Position(lowerTick, upperTick, 100)];
+
   return renderULMResult(positions, 10000);
 }
 
