@@ -24,7 +24,7 @@ jobs:
         run: yarn
 
       - name: Test to see if the project compiles
-        run: yarn asbuild
+        run: yarn build:debug
 
       - name: Perform tests
         run: yarn test
