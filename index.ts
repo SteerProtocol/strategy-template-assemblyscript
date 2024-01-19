@@ -12,8 +12,8 @@ import { prices } from "./tests/utils";
   const transformed = await bundle.execute(JSON.stringify(prices));
   console.log("Executed Bundle.");
   console.log("Finished Transformation. ", transformed);
-});
-
+})();
+/*
 function customRoundLog10(value) {
   const logTable = [
     0, 23027, 46054, 69081, 92109, 115136, 138163, 161190, 184216, 207243,
@@ -36,3 +36,4 @@ function customRoundLog10(value) {
 // Example usage
 let result = customRoundLog10(10);
 console.log("result: " +result); // Output: true
+*/

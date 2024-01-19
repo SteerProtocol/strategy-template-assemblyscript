@@ -28,7 +28,7 @@ function closestDivisibleNumber(num: i32, divisor: i32, floor: boolean): i32 {
   return i32(Math.ceil(num / divisor) * divisor);
 }
 
-function getTickFromPrice(price: u64): i32 {
+function getTickFromPrice(price: f64): i32 {
   const tick = Math.log(price) / Math.log(f64(1.0001));
   return i32(tick);
 }
