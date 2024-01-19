@@ -1,4 +1,4 @@
-import { config, config_payload, prices2 } from "./utils";
+import { config, config_payload, prices} from "./utils";
 import fs from 'fs';
 import { WasmModule, loadWasm } from "@steerprotocol/app-loader";
 
@@ -22,12 +22,12 @@ describe("WASM Module", () => {
       // The actual strategy instantiation and execution
       myModule.initialize(config_payload);
       // Call the config function on the strategy bundle
-      const result = await myModule.execute(JSON.stringify(prices2));
+      const result = await myModule.execute(JSON.stringify(prices));
       // Pull the result from memory and parse the result
       const parsedResult = JSON.parse(result);
       // The result should match the given config
       expect(JSON.stringify(parsedResult)).toStrictEqual(
-        `{\"functionName\":\"tend(uint256,(int24[],int24[],uint16[]),bytes)\",\"typesArray\":[\"uint256\",\"tuple(int24[],int24[],uint16[])\",\"bytes\"],\"valuesArray\":[10000,[[492180],[492720],[100]],\"0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff\"]}`
+        `{\"functionName\":\"tend(uint256,(int24[],int24[],uint16[]),bytes)\",\"typesArray\":[\"uint256\",\"tuple(int24[],int24[],uint16[])\",\"bytes\"],\"valuesArray\":[10000,[[275760],[276300],[100]],\"0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff\"]}`
       );
     });
   });

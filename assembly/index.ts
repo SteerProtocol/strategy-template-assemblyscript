@@ -1,18 +1,18 @@
-import { getTickFromPrice, getTickSpacing, renderULMResult } from "@steerprotocol/concentrated-liquidity-strategy/assembly";
+import { getTickSpacing, renderULMResult } from "@steerprotocol/concentrated-liquidity-strategy/assembly";
 import { parseCandles, Position, trailingStop } from "@steerprotocol/strategy-utils/assembly";
 import { JSON } from "json-as/assembly";
+import { floorDiv } from "./util";
 
 // @ts-ignore: Decorators valid here
 @serializable
 class Config {
   poolFee: i32 = 0;
-  percent: f64 = 0;
-}
-
-function isValidConfig(config: Config): boolean {
-  if (config.poolFee < 0) return false;
-  if (config.percent < 0) return false;
-  return true;
+  percent: i32 = 0;
+  isValid(): boolean {
+    if (this.poolFee < 0) return false;
+    if (this.percent < 0) return false;
+    return true;
+  }
 }
 
 let configObj: Config = new Config();
@@ -20,12 +20,17 @@ let configObj: Config = new Config();
 export function initialize(config: string): void {
   configObj = JSON.parse<Config>(config);
 
-  if (!isValidConfig(configObj)) throw new Error("Invalid configuration");
+  if (!configObj.isValid()) throw new Error("Invalid configuration");
 }
 
 function closestDivisibleNumber(num: i32, divisor: i32, floor: boolean): i32 {
-  if (floor) return i32(Math.floor(num / divisor) * divisor);
+  if (floor) return floorDiv(num, divisor) * divisor;
   return i32(Math.ceil(num / divisor) * divisor);
+}
+
+function getTickFromPrice(price: u64): i32 {
+  const tick = Math.log(price) / Math.log(f64(1.0001));
+  return i32(tick);
 }
 
 export function execute(_prices: string): string {
