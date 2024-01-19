@@ -1,7 +1,19 @@
 import { getTickSpacing, renderULMResult } from "@steerprotocol/concentrated-liquidity-strategy/assembly";
 import { parseCandles, Position, trailingStop } from "@steerprotocol/strategy-utils/assembly";
 import { JSON } from "json-as/assembly";
-import { floorDiv } from "./util";
+import { ceilDiv, floorDiv } from "./util";
+
+const logTable: i32[] = [0, 23027, 46054, 69081, 92109, 115136, 138163, 161190, 184216, 207243, 230270, 253297, 276324, 299351, 322378, 345405, 368431, 391458, 414485, 437512]
+function roundLog10(value: u64): i32 {
+  let count = 0;
+
+  while (value >= 10) {
+    value >>= 1;
+    count++;
+  }
+
+  return logTable[count];
+}
 
 // @ts-ignore: Decorators valid here
 @serializable
@@ -24,8 +36,9 @@ export function initialize(config: string): void {
 }
 
 function closestDivisibleNumber(num: i32, divisor: i32, floor: boolean): i32 {
+  console.log(`Performing operation ${floor ? "floor" : "ceil"}\n  num: ${num} divisor: ${divisor}\n  Floor: ${floorDiv(num, divisor)} === ${Math.floor(num / divisor)}`)
   if (floor) return floorDiv(num, divisor) * divisor;
-  return i32(Math.ceil(num / divisor) * divisor);
+  return ceilDiv(num, divisor) * divisor;
 }
 
 function getTickFromPrice(price: f64): i32 {
