@@ -31,7 +31,6 @@ let configObj: Config = new Config();
 
 export function initialize(config: string): void {
   configObj = JSON.parse<Config>(config);
-
   if (!configObj.isValid()) throw new Error("Invalid configuration");
 }
 
@@ -44,6 +43,18 @@ function closestDivisibleNumber(num: i32, divisor: i32, floor: boolean): i32 {
 function getTickFromPrice(price: f64): i32 {
   const tick = Math.log(price) / Math.log(f64(1.0001));
   return i32(tick);
+}
+
+function getTickFromPriceNoLog(price: u64): i32 {
+  let tick = 1.0001;
+  let result = -1;
+
+  while (u64(tick) < price) {
+    tick /= 1.0001;
+    result++;
+  }
+
+  return result;
 }
 
 export function execute(_prices: string): string {
